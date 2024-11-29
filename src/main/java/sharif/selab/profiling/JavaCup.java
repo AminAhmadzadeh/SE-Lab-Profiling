@@ -2,6 +2,7 @@ package sharif.selab.profiling;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 public class JavaCup {
     public static void main(String[] args)
@@ -25,12 +26,12 @@ public class JavaCup {
         else { System.out.println("NO"); }
     }
     public static void temp() {
-        ArrayList a = new ArrayList();
-        for (int i = 0; i < 10000; i++)
-        {
-            for (int j = 0; j < 20000; j++) {
-                a.add(i + j);
-            }
-        }
+        ArrayList<Integer> a = new ArrayList<>(2000000);
+        IntStream.range(0, 100).parallel().forEach(i -> {
+            for (int j = 0; j < 20000; j++)
+                synchronized (a) {
+                    a.add(i + j);
+                }
+        });
     }
 }
